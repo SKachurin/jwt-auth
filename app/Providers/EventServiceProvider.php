@@ -2,10 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\Rows;
+use App\Models\File;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
+use App\Observers\RowsObserver;
+use App\Observers\FileObserver;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -27,7 +31,8 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Rows::observe(RowsObserver::class);
+        File::observe(FileObserver::class);
     }
 
     /**

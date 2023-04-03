@@ -9,7 +9,7 @@ use App\Imports\RowsImport;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
-use Illuminate\Pagination\Paginator;
+use App\Models\File;
 
 
 
@@ -34,28 +34,27 @@ class RowsController extends Controller
 
     public function store(Request $request)
     {
-//        dd($request->file->hashName());
         $request->validate([
             'file' => 'required|mimes:xls,xlsx|max:2048', // size settings
         ]);
 
-        $fileName = time().$request->file->hashName();//.$request->file->extension(); file->original_name
+        $fileName = time().$request->file->hashName();
 
         $request->file->move(public_path('uploads'), $fileName);
 
-        Rows::truncate();
+        //create File for Observer
+        $file = new File();
+        $file->name = $fileName;
+        $file->save();
 
-        Excel::import(new RowsImport, public_path('uploads/'.$fileName)); //public function validateAndImport
+//        Rows::truncate();
+//        Excel::import(new RowsImport, public_path('uploads/'.$fileName)); //public function validateAndImport
 
         return response()->json('You have successfully upload file');
 
     }
 
-    // Import data
-//    public function import(Request $request){
-//        Excel::import(new EmployeesImport, $request->file('file')->store('temp'));
-//        return back()->with('success', 'Import successfully!');
-//    }
+
 
     // Validate and Import data
     public function validateAndImport(Request $request){
