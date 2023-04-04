@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Rows;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 
 class RowsObserver
@@ -16,7 +17,9 @@ class RowsObserver
     public function created(Rows $rows)
     {
 
-        //Redis::set('row.' . $rows->id, $rows->id .' is created'); //"Class \"Redis\" not found"
+        cache()->set($rows->id, $rows->id .' is created');
+//        $values = Cache::get($rows->id);
+//        dd($values);
     }
 
     /**

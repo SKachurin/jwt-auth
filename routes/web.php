@@ -33,3 +33,12 @@ Route::post('/store',[RowsController::class,'store'])->name('store');
 Route::get('/get_rows', [RowsController::class, 'index'])->name('get_rows');
 //Route::post('rows/import/', [RowsController::class, 'import'])->name('rows.import');
 Route::post('rows/validate_import/', [RowsController::class, 'validateAndImport'])->name('rows.validate_import');
+
+//number of Rows
+Route::get('/number',[RowsController::class,'number'])->name('number');
+
+//Broadcast
+
+Route::get('/ws', function () {
+    return view('welcome');
+});

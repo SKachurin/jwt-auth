@@ -16,7 +16,7 @@ class FileObserver
     public function created(File $file)
     {
         //dd($file);
-        StartParsing::dispatch($file)->delay(now()->addSeconds(3));
+        StartParsing::dispatch($file)->delay(now()->addSeconds(2));
     }
 
     /**

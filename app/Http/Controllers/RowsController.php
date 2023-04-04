@@ -7,9 +7,11 @@ use Illuminate\Http\Request;
 use App\Imports\RowsImport;
 //use Excel;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use App\Models\File;
+use Illuminate\Support\Facades\Cache;
 
 
 
@@ -54,16 +56,11 @@ class RowsController extends Controller
 
     }
 
+    public function number(Request $request)
+    {
 
+        $a = Redis::connection('cache')->keys('*');
 
-    // Validate and Import data
-    public function validateAndImport(Request $request){
-
-        $filePath = $request -> filePath;
-
-        Excel::import(new RowsImport, $filePath); //"employees.xlsx"
-
-//        return back()->with('success', 'Import successfully!');
-        return response()->json('Import successfully!');
+        return (count($a)-1);
     }
 }

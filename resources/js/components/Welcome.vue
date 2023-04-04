@@ -7,8 +7,7 @@
       file-types="xls,xlsx"
       v-on:fileAdded="fileAdded()"
   />
-  <h2 v-if="thanks" >and</h2>
-  <h2 v-if="thanks" v-html="thanks"></h2>
+  <h2 v-if="thanks" >and {{thanks}}</h2>
 
   <Block v-if="err_message" class="mb-0 mb-2 mr-4 ml-0 mt-4">{{err_message}}</Block>
 
@@ -22,10 +21,13 @@
   >
     See file
   </va-button>
+
+  <h2 v-if="number" class="mb-0 mb-2 mr-4 ml-0 mt-4"> Cache says: total count - {{number}} rows</h2>
 </template>
 
 <script type="module">
 import Block from './Block';
+import Pusher from 'pusher-js' // import Pusher
 
   export default {
     components: {Block},
@@ -36,6 +38,7 @@ import Block from './Block';
         loaded: '',
         file:'',
         err_message:'',
+        number:'',
       };
     },
     methods:{
@@ -48,7 +51,7 @@ import Block from './Block';
       },
       storeFile(){
         let self = this;
-        self.loading = true;
+        self.err_message = '';
 
         let formData = new FormData();
         formData.append('file', this.basic);
@@ -64,15 +67,47 @@ import Block from './Block';
 
             },
             function(error){
-              self.is_error = true;
               self.err_message = error;
 
             }
         )
+        if(!self.err_message){
+          axios.get('/number',
+              {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                }
+              }).
+          then(
+              function(response){
+                self.number = response.data;
+
+              },
+              function(error){
+                self.err_message = error;
+
+              }
+          )
+        }
       },
+      subscribe () {
+        Echo.channel('file_parsed')
+            .listen('.file_message', (e) => {
+              console.log('file is ready');
+
+            })
+        console.log(11);
+        Echo.channel('user')
+            .listen('.App\\Broadcasting\\FileParsed', (e) => {
+              console.log('user');
+
+            })
+      }
     },
     mounted() {
-      console.log(this.basic)
-    }
+      // console.log(this.basic)
+      this.subscribe();
+    },
+
   }
 </script>

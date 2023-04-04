@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use App\Events\FileParsed;
 use App\Models\File;
 use App\Models\Rows;
 use App\Imports\RowsImport;
@@ -18,9 +19,11 @@ class ParseFile {
 
         Excel::import(new RowsImport, public_path('uploads/'.$file->name));
 
+        $message = 'file is ready';
 
         //laravel echo
-        return response()->json('Import successfully!');
+        // return or FileParsed::dispatch($message);
+        return event(new FileParsed($message));
 
     }
 }

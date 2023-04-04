@@ -6,17 +6,15 @@ import Welcome from './components/Welcome.vue'
 import App from './components/App.vue'
 import Block from './components/Block.vue'
 
-// import '/var/www/html/resources/css/app.css';
 import { createVuestic } from "vuestic-ui";
 import "vuestic-ui/css";
 const vue = createApp(App).use(createVuestic()).mount("#app")
-// const app = createApp({
-//     /* root component options */
-// })
-//
-// vue.component('Welcome', Welcome)
-//     .component('App', App)
-//     .component('Block', Block)
+
+const channel = Echo.channel('file_parsed');
+
+channel.subscribed(()=>{
+    console.log('subscribed')
+})
 
 
 // /**
